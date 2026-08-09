@@ -1,0 +1,2 @@
+/* Keep the three trust points side by side on every screen size. */
+.trustStrip{grid-template-columns:28px minmax(0,1fr) 28px minmax(0,1fr) 28px minmax(0,1fr)!important;gap:7px!important}.trustStrip b{font-size:11px!important}.trustStrip small{font-size:9px!important}
