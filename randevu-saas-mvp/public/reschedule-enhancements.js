@@ -1,0 +1,12 @@
+/* Customer rescheduling uses the business's real hours and closed dates. */
+(function(){
+  const holidays=value=>String(value||'').split(',').map(x=>x.trim()).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x));
+  const hours=value=>{const match=String(value||'').match(/(\d{1,2}:\d{2})\s*[–-]\s*(\d{1,2}:\d{2})/);return match?{start:match[1].padStart(5,'0'),end:match[2].padStart(5,'0')}:{start:'09:00',end:'19:00'}};
+  const slots=range=>{const mins=v=>{const [h,m]=v.split(':').map(Number);return h*60+m},out=[];for(let n=mins(range.start);n<mins(range.end);n+=30)out.push(`${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`);return out};
+  window.rescheduleModal=async function(slug,id,phone){
+    modal(`<h2>Randevu saatini değiştir</h2><p class="sub">Yeni tarih ve saati seçin. Uygunluk anında kontrol edilir.</p><form class="form" onsubmit="customerReschedule(event,'${esc(slug)}','${id}','${esc(phone)}')"><label class="field">Yeni tarih<input required type="date" min="${today}" name="date" value="${today}"></label><label class="field">Yeni saat<select required name="time"></select></label><p class="field full holidayNotice" data-reschedule-note></p><div class="modalfoot field full"><button type="button" class="btn ghost" onclick="closeModal()">Vazgeç</button><button class="btn" type="submit">Değişiklik iste</button></div></form>`);
+    const form=document.querySelector('.modal .form')||document.querySelector('.form[onsubmit*="customerReschedule"]');if(!form)return;
+    const date=form.elements.date,time=form.elements.time,note=form.querySelector('[data-reschedule-note]'),submit=form.querySelector('[type="submit"]');
+    try{const response=await fetch(`/data/public/${encodeURIComponent(slug)}`,{cache:'no-store'}),data=await response.json();if(!response.ok)throw Error();const closed=holidays(data.tenant?.holidays),times=slots(hours(data.tenant?.workingHours));const refresh=()=>{const blocked=closed.includes(date.value);time.disabled=blocked;submit.disabled=blocked;time.innerHTML=blocked?'<option value="">İşletme kapalı</option>':times.map(x=>`<option value="${x}">${x}</option>`).join('');note.textContent=blocked?'Bu tarih işletmenin tatil günü. Lütfen başka bir gün seçin.':'Uygun saatlerden birini seçin.'};date.addEventListener('change',refresh);refresh();}catch(_){time.innerHTML='<option value="09:00">09:00</option>';note.textContent='Uygunluk kaydedilirken yeniden kontrol edilir.';}
+  };
+})();
