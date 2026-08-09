@@ -2,7 +2,7 @@ const app=document.querySelector('#app');let db,view='overview',tenantId='t_demo
 const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 const fmt=n=>new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',maximumFractionDigits:0}).format(n||0);
 const dateTR=d=>new Intl.DateTimeFormat('tr-TR',{day:'numeric',month:'short'}).format(new Date(d+'T12:00:00'));
-const api=async(path,method='GET',body)=>{const r=await fetch('/api/'+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const j=await r.json();if(!r.ok)throw Error(j.error||'İşlem yapılamadı');return j};
+const api=async(path,method='GET',body)=>{const r=await fetch('/data/'+path,{method,headers:{'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const text=await r.text();let j;try{j=JSON.parse(text)}catch{throw Error('Sunucu yanıtı alınamadı. Lütfen sayfayı yenileyin.')}if(!r.ok)throw Error(j.error||'İşlem yapılamadı');return j};
 const defaultFeatures={starter:['Online randevu sayfası','2 çalışan','Hizmet ve müşteri yönetimi','Temel randevu takvimi'],pro:['Başlangıç’taki her şey','8 çalışan','Randevu durumu yönetimi','Müşteri geçmişi ve notlar','Öncelikli destek'],business:['Profesyonel’deki her şey','30 çalışan','Çok şubeli yapıya hazır altyapı','Gelişmiş raporlama','Özel destek']};
 const featuresOf=p=>(p.features&&p.features.length?p.features:defaultFeatures[p.id]||[`En fazla ${p.staffLimit} çalışan`]);
 function toast(s){const t=document.querySelector('#toast');t.textContent=s;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
