@@ -90,6 +90,11 @@ const server = http.createServer(async (req, res) => {
         if(owner&&!db.supportRequests.some(item=>item.type==='password-reset'&&item.email===email&&item.status==='open')) db.supportRequests.unshift({id:id('support'),type:'password-reset',status:'open',createdAt:new Date().toISOString(),email,phone:tenant?.phone||'',tenantId:tenant?.id||'',tenantName:tenant?.name||'',note:'İşletme şifre desteği talep etti. Arama yapılmalı.'});
         writeDb(db); return json(res,200,{success:true});
       }
+      if (req.method === 'POST' && pathname === '/api/support/contact') {
+        const body=await parseBody(req); if(!body.name||!body.email||!body.message)return json(res,400,{error:'Adınız, e-posta adresiniz ve mesajınız zorunludur.'});
+        db.supportRequests=db.supportRequests||[]; db.supportRequests.unshift({id:id('support'),type:'contact',status:'open',createdAt:new Date().toISOString(),name:String(body.name).trim(),email:String(body.email).trim().toLowerCase(),phone:String(body.phone||'').trim(),note:String(body.message).trim()});
+        writeDb(db); return json(res,201,{success:true});
+      }
       if (req.method === 'PATCH' && (params=match('/api/support/requests/:requestId',pathname))) {
         const token=(req.headers.authorization||'').replace(/^Bearer\s+/,''); const session=sessions.get(token); if(!session||session.role!=='admin') return json(res,403,{error:'Bu işlem yalnızca yönetici hesabıyla yapılabilir.'});
         const item=(db.supportRequests||[]).find(entry=>entry.id===params.requestId); if(!item) return json(res,404,{error:'Destek kaydı bulunamadı.'}); Object.assign(item,await parseBody(req)); writeDb(db); return json(res,200,item);
