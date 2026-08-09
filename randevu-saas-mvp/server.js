@@ -82,6 +82,18 @@ const server = http.createServer(async (req, res) => {
       if (req.method === 'POST' && pathname === '/api/auth/admin-login') {
         const body=await parseBody(req);const admin=db.admins.find(x=>x.email.toLowerCase()===(body.email||'').toLowerCase()&&x.passwordHash===hashPassword(body.password||''));if(!admin)return json(res,401,{error:'Yönetim e-posta veya şifresi hatalı.'});const token=crypto.randomBytes(24).toString('hex');sessions.set(token,{adminId:admin.id,role:'admin'});return json(res,200,{token,admin:{name:admin.name,email:admin.email}});
       }
+      if (req.method === 'POST' && pathname === '/api/support/password-reset') {
+        const body=await parseBody(req); const email=(body.email||'').trim().toLowerCase();
+        if(!email) return json(res,400,{error:'Kayıtlı e-posta adresinizi girin.'});
+        const owner=db.owners.find(item=>item.email.toLowerCase()===email); const tenant=owner&&db.tenants.find(item=>item.id===owner.tenantId);
+        db.supportRequests=db.supportRequests||[];
+        if(owner&&!db.supportRequests.some(item=>item.type==='password-reset'&&item.email===email&&item.status==='open')) db.supportRequests.unshift({id:id('support'),type:'password-reset',status:'open',createdAt:new Date().toISOString(),email,phone:tenant?.phone||'',tenantId:tenant?.id||'',tenantName:tenant?.name||'',note:'İşletme şifre desteği talep etti. Arama yapılmalı.'});
+        writeDb(db); return json(res,200,{success:true});
+      }
+      if (req.method === 'PATCH' && (params=match('/api/support/requests/:requestId',pathname))) {
+        const token=(req.headers.authorization||'').replace(/^Bearer\s+/,''); const session=sessions.get(token); if(!session||session.role!=='admin') return json(res,403,{error:'Bu işlem yalnızca yönetici hesabıyla yapılabilir.'});
+        const item=(db.supportRequests||[]).find(entry=>entry.id===params.requestId); if(!item) return json(res,404,{error:'Destek kaydı bulunamadı.'}); Object.assign(item,await parseBody(req)); writeDb(db); return json(res,200,item);
+      }
       if (req.method === 'POST' && pathname === '/api/admins') {
         const body=await parseBody(req); if(!body.name||!body.email||!body.password)return json(res,400,{error:'Ad, e-posta ve şifre zorunludur.'}); if(db.admins.some(x=>x.email.toLowerCase()===body.email.toLowerCase()))return json(res,400,{error:'Bu e-posta ile kayıtlı bir yönetici var.'}); const admin={id:id('admin'),name:body.name,email:body.email.toLowerCase(),passwordHash:hashPassword(body.password)};db.admins.push(admin);writeDb(db);return json(res,201,{id:admin.id,name:admin.name,email:admin.email});
       }
