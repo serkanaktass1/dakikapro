@@ -1,0 +1,273 @@
+{
+  "settings": {
+    "trialDays": 30,
+    "currency": "TRY",
+    "platformName": "DakikaPro",
+    "supportEmail": "destek@randevupro.com",
+    "paymentProvider": "iyzico",
+    "maintenanceMode": false,
+    "notifications": {
+      "trial": true,
+      "payment": true,
+      "appointment": true
+    }
+  },
+  "plans": [
+    {
+      "id": "starter",
+      "name": "Başlangıç",
+      "price": 99,
+      "staffLimit": 2,
+      "featured": false,
+      "yearlyPrice": 1950,
+      "features": [
+        "Online randevu sayfası",
+        "2 çalışan",
+        "Hizmet ve müşteri yönetimi",
+        "Temel randevu takvimi"
+      ]
+    },
+    {
+      "id": "pro",
+      "name": "Profesyonel",
+      "price": 599,
+      "staffLimit": 8,
+      "featured": true,
+      "yearlyPrice": 5990
+    },
+    {
+      "id": "business",
+      "name": "İşletme",
+      "price": 999,
+      "staffLimit": 30,
+      "featured": false,
+      "yearlyPrice": 9990
+    }
+  ],
+  "tenants": [
+    {
+      "id": "t_demo",
+      "name": "The Gentlemen's Barber Club",
+      "slug": "gentlemens-barber-club",
+      "sector": "Premium Berber",
+      "status": "trial",
+      "planId": "starter",
+      "trialEndsAt": "2026-08-27",
+      "createdAt": "2026-07-28",
+      "phone": "0216 450 21 21",
+      "address": "Kadıköy, İstanbul",
+      "color": "#4f46e5",
+      "billingCycle": "monthly",
+      "workingHours": "Pazartesi–Cumartesi, 09:00–19:00"
+    },
+    {
+      "id": "t_active",
+      "name": "Luna Atelier Beauty",
+      "slug": "luna-atelier-beauty",
+      "sector": "Güzellik & Bakım",
+      "status": "active",
+      "planId": "business",
+      "trialEndsAt": null,
+      "createdAt": "2026-05-11",
+      "phone": "0216 570 34 56",
+      "address": "Ataşehir, İstanbul",
+      "color": "#db2777",
+      "billingCycle": "monthly",
+      "workingHours": "Pazartesi–Cumartesi, 09:00–19:00"
+    },
+    {
+      "id": "t_2b58334a18",
+      "name": "Umutberber",
+      "slug": "umutberber",
+      "sector": "Berber",
+      "status": "trial",
+      "planId": "starter",
+      "trialEndsAt": "2026-09-08",
+      "createdAt": "2026-08-09",
+      "phone": "",
+      "address": "İstanbul Kartal",
+      "color": "#4f46e5",
+      "billingCycle": "monthly",
+      "workingHours": "Pazartesi–Cumartesi, 09:00–19:00"
+    }
+  ],
+  "staff": [
+    {
+      "id": "s1",
+      "tenantId": "t_demo",
+      "name": "Ahmet Yılmaz",
+      "title": "Berber",
+      "active": true
+    },
+    {
+      "id": "s2",
+      "tenantId": "t_demo",
+      "name": "Emre Kaya",
+      "title": "Berber",
+      "active": true
+    },
+    {
+      "id": "s3",
+      "tenantId": "t_active",
+      "name": "Lara Aydın",
+      "title": "Cilt Bakım Uzmanı",
+      "active": true
+    }
+  ],
+  "services": [
+    {
+      "id": "v1",
+      "tenantId": "t_demo",
+      "name": "Signature Haircut",
+      "duration": 45,
+      "price": 650,
+      "active": true
+    },
+    {
+      "id": "v2",
+      "tenantId": "t_demo",
+      "name": "Classic Grooming Ritual",
+      "duration": 60,
+      "price": 950,
+      "active": true
+    },
+    {
+      "id": "v3",
+      "tenantId": "t_demo",
+      "name": "Çocuk Kesimi",
+      "duration": 25,
+      "price": 250,
+      "active": true
+    },
+    {
+      "id": "v4",
+      "tenantId": "t_active",
+      "name": "Hydra Glow Cilt Bakımı",
+      "duration": 75,
+      "price": 1800,
+      "active": true
+    }
+  ],
+  "customers": [
+    {
+      "id": "c1",
+      "tenantId": "t_demo",
+      "name": "Mert Aydın",
+      "phone": "0534 111 22 33",
+      "visits": 8
+    },
+    {
+      "id": "c2",
+      "tenantId": "t_demo",
+      "name": "Can Eren",
+      "phone": "0535 222 33 44",
+      "visits": 3
+    },
+    {
+      "id": "c3",
+      "tenantId": "t_active",
+      "name": "Deniz Kılıç",
+      "phone": "0536 333 44 55",
+      "visits": 4
+    },
+    {
+      "name": "Serkan aktaş",
+      "phone": "5076752924",
+      "visits": 0,
+      "id": "c_d4e4934fd6",
+      "tenantId": "t_demo"
+    },
+    {
+      "name": "serkan",
+      "phone": "50767502924",
+      "visits": 0,
+      "id": "c_4d19527ad2",
+      "tenantId": "t_demo"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "a1",
+      "tenantId": "t_demo",
+      "customerId": "c1",
+      "staffId": "s1",
+      "serviceId": "v2",
+      "date": "2026-08-09",
+      "time": "10:00",
+      "status": "cancelled",
+      "note": ""
+    },
+    {
+      "id": "a2",
+      "tenantId": "t_demo",
+      "customerId": "c2",
+      "staffId": "s2",
+      "serviceId": "v1",
+      "date": "2026-08-09",
+      "time": "11:30",
+      "status": "cancelled",
+      "note": ""
+    },
+    {
+      "id": "a3",
+      "tenantId": "t_demo",
+      "customerId": "c1",
+      "staffId": "s1",
+      "serviceId": "v1",
+      "date": "2026-08-10",
+      "time": "14:00",
+      "status": "pending",
+      "note": "İlk kez gelecek"
+    },
+    {
+      "customerId": "c_d4e4934fd6",
+      "staffId": "s1",
+      "serviceId": "v1",
+      "date": "2026-08-09",
+      "time": "09:00",
+      "status": "cancelled",
+      "note": "Online randevu talebi",
+      "id": "a_6c8113e5ea",
+      "tenantId": "t_demo"
+    },
+    {
+      "customerId": "c_4d19527ad2",
+      "staffId": "s1",
+      "serviceId": "v1",
+      "date": "2026-08-09",
+      "time": "09:00",
+      "status": "cancelled",
+      "note": "Online randevu talebi",
+      "id": "a_330c3513bf",
+      "tenantId": "t_demo"
+    },
+    {
+      "customerId": "c_4d19527ad2",
+      "staffId": "s2",
+      "serviceId": "v2",
+      "date": "2026-08-09",
+      "time": "09:00",
+      "status": "cancelled",
+      "note": "Online randevu talebi",
+      "id": "a_c67ddac505",
+      "tenantId": "t_demo"
+    }
+  ],
+  "owners": [
+    {
+      "id": "o_demo",
+      "tenantId": "t_demo",
+      "name": "Ahmet Yılmaz",
+      "email": "owner@makasberber.com",
+      "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791"
+    }
+  ],
+  "admins": [
+    {
+      "id": "admin_1",
+      "name": "Serkan Aktaş",
+      "email": "sa@dadikapro.com",
+      "passwordHash": "367dc7290c4575ab0e9847869af3952af0007f8ef2b1799df065002d534582de"
+    }
+  ]
+}

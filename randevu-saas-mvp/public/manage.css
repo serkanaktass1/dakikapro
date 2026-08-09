@@ -1,0 +1,1 @@
+.staffCell{display:flex;align-items:center;gap:11px;white-space:normal!important}.staffPhoto,.staffPlaceholder{width:42px;height:42px;flex:0 0 42px;border-radius:50%;object-fit:cover}.staffPhoto{border:2px solid #e0e7ff;background:#eef2ff}.staffPlaceholder{display:grid;place-items:center;background:#e0e7ff;color:#4338ca;font:800 16px 'Plus Jakarta Sans'}

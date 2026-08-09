@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: dakikapro-staging
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: NODE_VERSION
+        value: 20
+    disk:
+      name: dakikapro-data
+      mountPath: /var/data
+      sizeGB: 1
