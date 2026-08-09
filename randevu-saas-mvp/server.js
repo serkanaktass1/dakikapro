@@ -64,7 +64,7 @@ function match(route, pathname) { const a = route.split('/').filter(Boolean), b 
 function tenantData(db, tenantId) { return { tenant: db.tenants.find(x=>x.id===tenantId), staff: db.staff.filter(x=>x.tenantId===tenantId), services: db.services.filter(x=>x.tenantId===tenantId), customers: db.customers.filter(x=>x.tenantId===tenantId), appointments: db.appointments.filter(x=>x.tenantId===tenantId) }; }
 
 const server = http.createServer(async (req, res) => {
-  const url = new URL(req.url, `http://${req.headers.host}`); const pathname = url.pathname;
+  const url = new URL(req.url, `http://${req.headers.host}`); const incomingPath = url.pathname; const pathname = incomingPath.startsWith('/data/') ? '/api/'+incomingPath.slice('/data/'.length) : incomingPath;
   try {
     if (pathname.startsWith('/api/')) {
       const db = readDb(); let params;
