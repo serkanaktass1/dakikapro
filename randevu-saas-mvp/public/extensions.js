@@ -49,7 +49,7 @@ function polishDemoExperience() {
 
 async function openAdmins() {
   try {
-    const response = await fetch('/api/bootstrap');
+    const response = await fetch('/data/bootstrap');
     const data = await response.json();
     const admins = data.admins || [];
     const main = document.querySelector('.shell .main');
@@ -61,7 +61,7 @@ async function openAdmins() {
 async function addAdmin(event) {
   event.preventDefault();
   const body = Object.fromEntries(new FormData(event.target));
-  const response = await fetch('/api/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const response = await fetch('/data/admins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   const data = await response.json();
   if (!response.ok) return alert(data.error || 'Yönetici eklenemedi.');
   alert('Yeni yönetici eklendi.');
@@ -108,7 +108,7 @@ async function refreshLandingContent() {
   const testimonials = document.querySelector('.testimonials .benefits');
   if (!examples && !testimonials) return;
   try {
-    const response = await fetch('/api/bootstrap');
+    const response = await fetch('/data/bootstrap');
     if (!response.ok) return;
     const data = await response.json();
     const tenants = (data.tenants || []).filter(tenant => tenant.status !== 'inactive');
