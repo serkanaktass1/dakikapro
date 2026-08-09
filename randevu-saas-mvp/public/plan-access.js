@@ -47,3 +47,15 @@ setTimeout(() => {
   style.textContent = '.nav.planLocked{opacity:.62;position:relative}.nav.planLocked small{float:right;background:#4f46e5;color:#fff;border-radius:10px;padding:2px 5px;font-size:9px;letter-spacing:.4px}.planAccessNote{margin-bottom:18px}';
   document.head.appendChild(style);
 }, 120);
+
+setInterval(()=>{
+  if(location.hash!=='#business') return;
+  const labels={business:'Kontrol Merkezi',appointments:'Randevu Takvimi',staff:'Ekip Yönetimi',services:'Hizmet Kataloğu',customers:'Müşteri Yönetimi',businessAnalytics:'Raporlar & Analiz',businessSettings:'İşletme Profili & Sayfa',subscription:'Paket & Ödemeler'};
+  document.querySelectorAll('.business-side .nav').forEach(button=>{const action=button.getAttribute('onclick')||'',key=Object.keys(labels).find(id=>action.includes("'"+id+"'"));if(key){const badge=button.querySelector('small');button.childNodes[0].nodeValue=labels[key];if(badge)button.appendChild(badge);}});
+},250);
+
+const sectorDatalist=document.createElement('datalist');
+sectorDatalist.id='dakikaProSectors';
+sectorDatalist.innerHTML=['Berber','Kuaför','Güzellik Salonu','Nail Studio','Cilt Bakım & Estetik','Masaj & Spa','Psikolog & Danışmanlık','Diyetisyen','Fizyoterapi','Pilates & Fitness','Yoga Stüdyosu','Özel Ders & Kurs','Veteriner Kliniği','Sağlık & Klinik','Araç Servis & Bakım','Evcil Hayvan Bakımı','Diğer'].map(x=>`<option value="${x}">`).join('');
+document.head.appendChild(sectorDatalist);
+setInterval(()=>document.querySelectorAll('input[name="sector"]').forEach(input=>input.setAttribute('list','dakikaProSectors')),400);
