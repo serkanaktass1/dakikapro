@@ -106,6 +106,13 @@ const server = http.createServer(async (req, res) => {
       if (req.method === 'GET' && (params=match('/api/tenant/:tenantId', pathname))) return json(res, 200, tenantData(db, params.tenantId));
       if (req.method === 'POST' && pathname === '/api/tenants') { const body=await parseBody(req); const slug=(body.slug||'').toLocaleLowerCase('tr-TR').replace(/[^a-z0-9ğüşıöç]+/g,'-').replace(/^-|-$/g,''); if(!body.name||!slug||db.tenants.some(x=>x.slug===slug)) return json(res,400,{error:'İşletme adı ve benzersiz bağlantı gerekir.'}); const t={id:id('t'),name:body.name,slug,sector:body.sector||'Diğer',status:'trial',planId:body.planId||'starter',trialEndsAt:new Date(Date.now()+db.settings.trialDays*86400000).toISOString().slice(0,10),createdAt:new Date().toISOString().slice(0,10),phone:body.phone||'',address:body.address||'',color:'#4f46e5'}; db.tenants.push(t); writeDb(db); return json(res,201,t); }
       if (req.method === 'PATCH' && (params=match('/api/tenants/:tenantId',pathname))) { const t=db.tenants.find(x=>x.id===params.tenantId); if(!t)return json(res,404,{error:'Bulunamadı'}); Object.assign(t,await parseBody(req)); writeDb(db); return json(res,200,t); }
+      if (req.method === 'POST' && (params=match('/api/tenants/:tenantId/reset-owner-password',pathname))) {
+        const token=(req.headers.authorization||'').replace(/^Bearer\s+/,''); const session=sessions.get(token);
+        if(!session||session.role!=='admin') return json(res,403,{error:'Bu işlem yalnızca yönetici hesabıyla yapılabilir.'});
+        const body=await parseBody(req); if(!body.password||String(body.password).length<6) return json(res,400,{error:'Yeni şifre en az 6 karakter olmalıdır.'});
+        const owner=db.owners.find(x=>x.tenantId===params.tenantId); if(!owner) return json(res,404,{error:'Bu işletme için giriş hesabı bulunamadı.'});
+        owner.passwordHash=hashPassword(body.password); writeDb(db); return json(res,200,{success:true,email:owner.email});
+      }
       if (req.method === 'DELETE' && (params=match('/api/tenants/:tenantId',pathname))) {
         const index=db.tenants.findIndex(x=>x.id===params.tenantId); if(index<0)return json(res,404,{error:'İşletme bulunamadı'});
         db.tenants.splice(index,1); for(const collection of ['staff','services','customers','appointments','owners']) db[collection]=db[collection].filter(x=>x.tenantId!==params.tenantId); writeDb(db); return json(res,200,{success:true});
